@@ -85,12 +85,7 @@ export const getSessionPermisos = async (): Promise<string[] | null> => {
     return usuario.permisos; // Esto ahora debería ser correcto
 };
 
-// export const getEmpleadoSession = async () => {
-//     const empleado = cookies().get("employee")?.value;
-//     if (!empleado) {
-//         return null;
-//     }
-// };
+
 type TRolAcceso = {
     id: string;
     nivelAcceso: number;
@@ -99,6 +94,37 @@ type TRolAcceso = {
     esquema: string;
     tagServicio: string;
 };
+const chunkCookie = ({ name, value, size }: { name: string; value: string; size: number }) => {
+    const chunks = Math.ceil(value.length / size);
+    for (let i = 0; i < chunks; i++) {
+        const chunkValue = value.slice(i * size, (i + 1) * size);
+        cookies().set(`${name}Chunk${i}`, chunkValue);
+    }
+};
+const getADAuthentication = async (correo: string, contrasena: string) => {
+    console.log(correo)
+    console.log(contrasena)
+    const url = `${process.env.URLLOGIN}`;
+    const response = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ correo, contrasena }),
+    });
+    if (!response.ok) {
+        return null;
+    }
+    const { token } = await response.json();
+    console.log(token)
+    return token;
+};
+export const getToken = async () => {
+    const token = cookies().get("session")?.value;
+    if(!token){
+        return null
+    }
+    return token as string;
+};
+
 // const getNivelesAcceso = async () => {
 //     const url = `${process.env.API_COMMON_AUTHENTICATION}/v1/ldap/roles/servicio/app_estado_cuenta`;
 //     const response = await fetch(url, {
@@ -113,29 +139,7 @@ type TRolAcceso = {
 //     chunkCookie({ name: "roles", value: JSON.stringify(data), size: 2000 });
 //     return data;
 // };
-const chunkCookie = ({ name, value, size }: { name: string; value: string; size: number }) => {
-    const chunks = Math.ceil(value.length / size);
-    for (let i = 0; i < chunks; i++) {
-        const chunkValue = value.slice(i * size, (i + 1) * size);
-        cookies().set(`${name}Chunk${i}`, chunkValue);
-    }
-};
-const getADAuthentication = async (correo: string, contrasena: string) => {
-    console.log(correo)
-    console.log(contrasena)
-    const url = `${process.env.URL}`;
-    const response = await fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ correo, contrasena }),
-    });
-    if (!response.ok) {
-        return null;
-    }
-    const { token } = await response.json();
-    console.log(token)
-    return token;
-};
+
 // export const logout = () => {
 //     cookies().set("session", "", { expires: new Date(0), httpOnly: true });
 //     cookies().set("employee", "", { expires: new Date(0), httpOnly: true });
@@ -153,9 +157,10 @@ const getADAuthentication = async (correo: string, contrasena: string) => {
 //         i++;
 //     }
 // };
-export const getToken = async () => {
-    const token = cookies().get("session")?.value;
-    return token as string;
-};
 
-
+// export const getEmpleadoSession = async () => {
+//     const empleado = cookies().get("employee")?.value;
+//     if (!empleado) {
+//         return null;
+//     }
+// };
