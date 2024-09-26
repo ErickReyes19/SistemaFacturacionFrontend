@@ -13,30 +13,37 @@ class ApiService {
       },
     });
 
+    // Interceptor para las solicitudes
     this.axiosInstance.interceptors.request.use(
       async (config) => {
         try {
-          const token = await getToken();  // Resuelve la promesa aquí
-          console.log("🚀 ~ ApiService ~ constructor ~ token:", token);
+          const token = await getToken();
           if (token) {
             config.headers.Authorization = `Bearer ${token}`;
+          } else {
+            // Redirige si no hay token
+            if (typeof window !== "undefined") {
+              window.location.href = "/";
+            }
           }
         } catch (error) {
-          console.error("Error al obtener el token:", error);
+          // En caso de error en la obtención del token
+          window.location.href = "/";
         }
         return config;
       },
       (error) => Promise.reject(error)
     );
 
+    // Interceptor para las respuestas
     this.axiosInstance.interceptors.response.use(
       (response) => response,
       (error) => {
         if (error.response && error.response.status === 401) {
           if (typeof window !== "undefined") {
-            window.location.href = "/"; // Redirección en el lado del cliente
+            window.location.href = "/";
           } else {
-            redirect("/"); // Redirección en el servidor
+            redirect("/");
           }
         }
         return Promise.reject(error);

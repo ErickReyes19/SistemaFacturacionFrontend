@@ -14,6 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { redirect } from "next/navigation";
 
 export const columns: ColumnDef<Categoria>[] = [
   {
@@ -82,7 +83,7 @@ export const columns: ColumnDef<Categoria>[] = [
     header: "Acciones",
     cell: ({ row }) => {
       const categoria = row.original;
-
+    
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -93,14 +94,13 @@ export const columns: ColumnDef<Categoria>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Acciones</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(categoria.categoriaID)}>
+            <DropdownMenuItem onClick={() => redirect(`/categorias/${categoria.categoriaId}`)}>
               Editar
             </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Ver</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
     },
+    
   },
 ];

@@ -1,5 +1,5 @@
 export type Categoria = {
-    categoriaID:   string;
+    categoriaId:   string;
     nombre:        string;
     descripcion:   string;
     fechaCreacion: Date;

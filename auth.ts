@@ -3,6 +3,7 @@
 import { type TSchemaSignIn, schemaSignIn } from "./lib/shemas";
 import { type JWTPayload, SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
+import { RedirectType, redirect } from "next/navigation";
 const key = new TextEncoder().encode(process.env.AUTH_SECRET);
 interface UsuarioSesion {
     userId: string;
@@ -120,7 +121,7 @@ const getADAuthentication = async (correo: string, contrasena: string) => {
 export const getToken = async () => {
     const token = cookies().get("session")?.value;
     if(!token){
-        return null
+        return ''
     }
     return token as string;
 };
