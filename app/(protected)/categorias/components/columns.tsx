@@ -15,6 +15,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { redirect } from "next/navigation";
+import Link from "next/link";
 
 export const columns: ColumnDef<Categoria>[] = [
   {
@@ -75,7 +76,7 @@ export const columns: ColumnDef<Categoria>[] = [
     ),
     cell: ({ row }) => {
       const isActive = row.getValue("activo");
-      return <div className="">{isActive ? <div className="flex gap-2"><CheckCircleIcon color="green"/> Activo </div> : <div className="flex gap-2"><XCircleIcon color="red"/> Inactivo </div>}</div>;
+      return <div className="">{isActive ? <div className="flex gap-2"><CheckCircleIcon color="green" /> Activo </div> : <div className="flex gap-2"><XCircleIcon color="red" /> Inactivo </div>}</div>;
     },
   },
   {
@@ -83,7 +84,7 @@ export const columns: ColumnDef<Categoria>[] = [
     header: "Acciones",
     cell: ({ row }) => {
       const categoria = row.original;
-    
+
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -94,13 +95,13 @@ export const columns: ColumnDef<Categoria>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Acciones</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => redirect(`/categorias/${categoria.categoriaId}`)}>
-              Editar
-            </DropdownMenuItem>
+            <Link href={`/categorias/${categoria.categoriaId}/edit`}>
+              <DropdownMenuItem>Editar</DropdownMenuItem>
+            </Link>
           </DropdownMenuContent>
         </DropdownMenu>
       );
     },
-    
+
   },
 ];

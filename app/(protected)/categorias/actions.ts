@@ -1,29 +1,48 @@
-'use server'
+"use server";
 
-import { Categoria } from '@/lib/Types';
-import apiService from '../../../lib/server';
-
+import { Categoria } from "@/lib/Types";
+import apiService from "../../../lib/server";
 
 export async function getCategorias() {
   try {
-    const response = await apiService.get<Categoria[]>('/categorias');
+    const response = await apiService.get<Categoria[]>("/categorias");
     return response.data;
   } catch (error) {
-    console.error('Error al obtener categorías:', error);
+    console.error("Error al obtener categorías:", error);
     return [];
+  }
+}
+export async function getCategoriaById(id: string) {
+  try {
+    const response = await apiService.get<Categoria>(`/categorias/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error al obtener categorías:", error);
+    return null;
   }
 }
 
 export async function postCategorias(nombre: string, descripcion: string) {
   const data = {
     nombre,
-    descripcion
-  }
+    descripcion,
+  };
   try {
-    const response = await apiService.post('/categorias', data);
+    const response = await apiService.post("/categorias", data);
     return response.data;
   } catch (error) {
-    console.error('Error al obtener categorías:', error);
+    console.error("Error al obtener categorías:", error);
+    return [];
+  }
+}
+
+export async function putCategoria(data: Categoria) {
+console.log("🚀 ~ putCategoria ~ data:", data)
+
+  try {
+    const response = await apiService.put(`/categorias/${data.categoriaId}`, data);
+    return response.data;
+  } catch (error) {
     return [];
   }
 }

@@ -21,7 +21,6 @@ function Login() {
     const onSubmit = async (data: TSchemaSignIn) => {
         startTransition(async () => {
             const response = await login(data);
-            console.log("🚀 ~ startTransition ~ response:", response)
             if (response.error) {
                 formSignIn.setError("password", { message: response.error });
                 return;

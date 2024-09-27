@@ -19,9 +19,7 @@ export async function encrypt(payload: JWTPayload | undefined) {
         .sign(key);
 }
 export const decrypt = async (input: string): Promise<UsuarioSesion> => {
-    console.log("🚀 ~ decrypt ~ input:", input);
     const { payload } = await jwtVerify<JWTPayload>(input, key, { algorithms: ["HS256"] });
-    console.log("🚀 ~ decrypt ~ payload:", payload);
 
     const usuarioSesion: UsuarioSesion = {
         userId: payload.userId as string,
@@ -48,11 +46,9 @@ export const login = async (credentials: TSchemaSignIn) => {
         //     return { error: "Usuario no autorizado" };
         // }
         const decryptedToken = await decrypt(tokenAD);
-        console.log("🚀 ~ login ~ decryptedToken:", decryptedToken)
         // const employeeNumber = decryptedToken.employeeNumber as string;
 
         const session = tokenAD;
-        console.log("🚀 ~ login ~ session:", session)
         const expires = new Date(((await decrypt(session)).exp as number) * 1000);
         cookies().set("session", session, { expires, httpOnly: true });
         return { success: "Login OK" };
@@ -103,8 +99,7 @@ const chunkCookie = ({ name, value, size }: { name: string; value: string; size:
     }
 };
 const getADAuthentication = async (correo: string, contrasena: string) => {
-    console.log(correo)
-    console.log(contrasena)
+
     const url = `${process.env.URLLOGIN}`;
     const response = await fetch(url, {
         method: "POST",

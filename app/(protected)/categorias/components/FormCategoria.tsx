@@ -1,8 +1,7 @@
-"use client"
+"use client";
 
-import { z } from "zod"
-
-import { Button } from "@/components/ui/button"
+import { z } from "zod";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -11,30 +10,47 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { postCategorias } from "../actions"
-
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { postCategorias } from "../actions";
+import { useRouter } from "next/navigation"; // Importa useRouter
+import { useToast } from "@/hooks/use-toast";
 
 export const CategoriaElementSchema = z.object({
-    "nombre": z.string(),
-    "descripcion": z.string(),
+  nombre: z.string(),
+  descripcion: z.string(),
 });
 
 export function FormCategoria() {
-    const form = useForm<z.infer<typeof CategoriaElementSchema>>({
-        resolver: zodResolver(CategoriaElementSchema),
-      })
-     
-      function onSubmit(values: z.infer<typeof CategoriaElementSchema>) {
-        console.log(values)
-        postCategorias(values.nombre, values.descripcion)
-      }
+  const router = useRouter(); 
+  const { toast } = useToast();
+  const form = useForm<z.infer<typeof CategoriaElementSchema>>({
+    resolver: zodResolver(CategoriaElementSchema),
+  });
+
+  async function onSubmit(values: z.infer<typeof CategoriaElementSchema>) {
+
+    try {
+      await postCategorias(values.nombre, values.descripcion);
+      toast({
+        title: "Éxito",
+        description: "Categoría creada con éxito",
+      });
+      router.push("/categorias");
+    } catch (error) {
+      console.error("Error al enviar la categoría:", error);
+      toast({
+        title: "Error",
+        description: `Error al editar la categoria: ${error}`,
+      });
+    }
+  }
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 border rounded-md p-4">
         <FormField
           control={form.control}
           name="nombre"
@@ -45,7 +61,7 @@ export function FormCategoria() {
                 <Input placeholder="Nombre" {...field} />
               </FormControl>
               <FormDescription>
-               Ingrese el nombre de la categoria
+                Ingrese el nombre de la categoria
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -60,9 +76,7 @@ export function FormCategoria() {
               <FormControl>
                 <Input placeholder="Descripción" {...field} />
               </FormControl>
-              <FormDescription>
-               Ingrese la descripción
-              </FormDescription>
+              <FormDescription>Ingrese la descripción</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -70,5 +84,5 @@ export function FormCategoria() {
         <Button type="submit">Submit</Button>
       </form>
     </Form>
-  )
+  );
 }
