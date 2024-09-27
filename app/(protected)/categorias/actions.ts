@@ -12,6 +12,15 @@ export async function getCategorias() {
     return [];
   }
 }
+export async function getCategoriasActivas() {
+  try {
+    const response = await apiService.get<Categoria[]>("/categorias/activas");
+    return response.data;
+  } catch (error) {
+    console.error("Error al obtener categorías:", error);
+    return [];
+  }
+}
 export async function getCategoriaById(id: string) {
   try {
     const response = await apiService.get<Categoria>(`/categorias/${id}`);
@@ -37,7 +46,6 @@ export async function postCategorias(nombre: string, descripcion: string) {
 }
 
 export async function putCategoria(data: Categoria) {
-console.log("🚀 ~ putCategoria ~ data:", data)
 
   try {
     const response = await apiService.put(`/categorias/${data.categoriaId}`, data);

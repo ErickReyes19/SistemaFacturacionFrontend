@@ -5,3 +5,14 @@ export type Categoria = {
     fechaCreacion: Date;
     activo:        boolean;
 }
+
+export type Producto = {
+    productoId:     string;
+    nombreProducto: string;
+    precioProducto: string;
+    descripcion:    string;
+    fechaRegistro:  Date;
+    activo:         boolean;
+    categoriaNombre:    string;
+}
+

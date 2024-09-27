@@ -17,11 +17,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { postCategorias } from "../actions";
 import { useRouter } from "next/navigation"; // Importa useRouter
 import { useToast } from "@/hooks/use-toast";
+import { CategoriaElementSchema } from "../schema";
 
-export const CategoriaElementSchema = z.object({
-  nombre: z.string(),
-  descripcion: z.string(),
-});
+
 
 export function FormCategoria() {
   const router = useRouter(); 

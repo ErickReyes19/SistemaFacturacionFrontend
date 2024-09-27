@@ -14,7 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { postCategorias, putCategoria } from "../../../actions";
+import {  putCategoria } from "../../../actions";
 import { useRouter } from "next/navigation"; // Cambiar aquí
 import { useToast } from "@/hooks/use-toast";
 import { Categoria } from "@/lib/Types";
