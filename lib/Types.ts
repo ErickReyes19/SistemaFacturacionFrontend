@@ -29,5 +29,15 @@ export type Cliente = {
     fechaRegistro:  Date;
 }
 
+export type Rol = {
+    rolId:         string;
+    nombre:        string;
+    descripcion:   string;
+    fechaCreacion: Date;
+    activo:        boolean;
+}
+
+
+
 
 

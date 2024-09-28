@@ -110,7 +110,7 @@ const getADAuthentication = async (correo: string, contrasena: string) => {
         return null;
     }
     const { token } = await response.json();
-    console.log(token)
+
     return token;
 };
 export const getToken = async () => {

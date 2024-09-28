@@ -46,9 +46,7 @@ export function FormEditCliente({ cliente }: {cliente: Cliente}) {
     },
   });
 
-  async function onSubmit(values: z.infer<typeof ClienteElementSchema>) {
-    console.log("🚀 ~ onSubmit ~ values:", values)
-    
+  async function onSubmit(values: z.infer<typeof ClienteElementSchema>) {    
     try {
       await putCliente({ data: values } );
       toast({

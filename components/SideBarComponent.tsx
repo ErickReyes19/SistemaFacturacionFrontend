@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
-import { Grid2X2Icon, Menu, Package, ReceiptIcon, Users } from "lucide-react";
+import { Grid2X2Icon, Menu, Package, ReceiptIcon, UserCog, UserCog2, Users } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -190,6 +190,18 @@ export default function SideBar() {
               >
                 <Users className="h-4 w-4" />
                 Clientes
+              </Link>
+              <Link
+                href="/rolespermisos"
+                className={cn(
+                  "flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50",
+                  "hover:bg-gray-100 dark:hover:bg-gray-800",
+                  "focus:bg-gray-100 dark:focus:bg-gray-800",
+                  "active:bg-gray-100 dark:active:bg-gray-800"
+                )}
+              >
+                <UserCog className="h-4 w-4" />
+                Roles y permisos
               </Link>
             </nav>
           </ScrollArea>

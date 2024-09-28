@@ -16,7 +16,6 @@ export async function getClientes() {
 }
 
 export async function putCliente({ data }: { data: Cliente }) {
-  console.log("🚀 ~ putCliente ~ data:", data);
   try {
     const response = await apiService.put(`/clientes/${data.clienteId}`, data);
 
