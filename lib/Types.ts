@@ -37,6 +37,14 @@ export type Rol = {
     activo:        boolean;
 }
 
+export type Permiso = {
+    permisoId:     string;
+    nombre:        string;
+    fechaCreacion: Date;
+    activo:        boolean;
+}
+
+
 
 
 

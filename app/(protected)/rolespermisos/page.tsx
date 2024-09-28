@@ -29,12 +29,12 @@ export default async function Clientes() {
             nombre="Rol"
           />
           <CardIconLink
-            enlace="/rolesPermisos/permisos"
+            enlace="/rolespermisos/permisos"
             Icon={ListCheck}
             nombre="Permisos"
           />
           <CardIconLink
-            enlace="/rolesPermisos/asignarpermisos"
+            enlace="/rolespermisos/asignarpermisos"
             Icon={Settings2}
             nombre="Asignar Permisos"
           />
