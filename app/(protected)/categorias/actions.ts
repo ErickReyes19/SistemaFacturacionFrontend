@@ -46,6 +46,7 @@ export async function postCategorias(nombre: string, descripcion: string) {
 }
 
 export async function putCategoria(data: Categoria) {
+console.log("🚀 ~ putCategoria ~ data:", data)
 
   try {
     const response = await apiService.put(`/categorias/${data.categoriaId}`, data);

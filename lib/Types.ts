@@ -13,6 +13,21 @@ export type Producto = {
     descripcion:    string;
     fechaRegistro:  Date;
     activo:         boolean;
-    categoriaNombre:    string;
+    categoriaNombre:string;
+    stock:          string;
 }
+
+export type Cliente = {
+    clienteId:      string;
+    nombre?:        string;
+    identidad?:     string;
+    apellido?:      string;
+    correo?:        string;
+    telefono?:      string;
+    direccion?:     string;
+    activo:         boolean;
+    fechaRegistro:  Date;
+}
+
+
 

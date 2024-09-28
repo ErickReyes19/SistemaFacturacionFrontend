@@ -38,7 +38,7 @@ export function DataTable<TData, TValue>({
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
-  const [globalFilter, setGlobalFilter] = React.useState<string>(""); // Estado para el filtro global
+  const [globalFilter, setGlobalFilter] = React.useState<string>(""); 
 
   const table = useReactTable({
     data,
@@ -72,7 +72,7 @@ export function DataTable<TData, TValue>({
           className="max-w-sm"
         />
         <Button>
-          <Link href={`/productos/create`}>Nuevo producto</Link>
+          <Link href={`/clientes/create`}>Nuevo cliente</Link>
           <Plus />
         </Button>
       </div>

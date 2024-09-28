@@ -6,6 +6,7 @@ import apiService from "../../../lib/server";
 export async function getProductos() {
   try {
     const response = await apiService.get<Producto[]>("/productos");
+    console.log(response.data)
     return response.data;
   } catch (error) {
     console.error("Error al obtener categorías:", error);
@@ -24,6 +25,7 @@ export async function getProductoById(id: string) {
 }
 
 export async function putProducto(data: Producto) {
+  console.log("🚀 ~ putProducto ~ data:", data)
   try {
     
     const response = await apiService.put(`/productos/${data.productoId}`, {
@@ -41,13 +43,15 @@ export async function postProducto(
   nombreProducto: string,
   precioProducto: string,
   descripcion: string,
-  categoriaNombre: string
+  categoriaNombre: string,
+  stock: string
 ) {
   const data = {
     nombreProducto,
     precioProducto,
     descripcion,
     categoriaNombre,
+    stock
   };
   try {
     const response = await apiService.post("/productos", data);

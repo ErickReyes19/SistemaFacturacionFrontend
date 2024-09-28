@@ -6,5 +6,6 @@ export const ProductoElementSchema = z.object({
     "precioProducto": z.string(),
     "descripcion": z.string(),
     "categoriaNombre": z.string(),
+    "stock": z.string(),
 });
 export type ProductoElement = z.infer<typeof ProductoElementSchema>;

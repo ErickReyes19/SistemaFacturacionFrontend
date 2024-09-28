@@ -1,6 +1,6 @@
 "use client";
 import { ArrowUpDown, Check, CheckCircleIcon } from "lucide-react";
-import { Producto } from "@/lib/Types";
+import { Cliente } from "@/lib/Types";
 import { FormateadorFecha } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal, CheckCircle, XCircleIcon } from "lucide-react";
@@ -14,17 +14,29 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { redirect } from "next/navigation";
 import Link from "next/link";
 
-export const columns: ColumnDef<Producto>[] = [
+export const columns: ColumnDef<Cliente>[] = [
   {
-    accessorKey: "nombreProducto",
+    accessorKey: "identidad",
     header: ({ column }) => (
       <Button
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        className="text-center"
+        className="text-left"
+      >
+        Identidad
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
+  },
+  {
+    accessorKey: "nombre",
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        className="text-left" 
       >
         Nombre
         <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -32,74 +44,56 @@ export const columns: ColumnDef<Producto>[] = [
     ),
   },
   {
-    accessorKey: "precioProducto",
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        className="text-right" // Cambiar a text-right para alinear el encabezado
-      >
-        Precio
-        <ArrowUpDown className="ml-2 h-4 w-4" />
-      </Button>
-    ),
-    cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("precioProducto"));
-      const formatted = new Intl.NumberFormat("en-HN", {
-        style: "currency",
-        currency: "HNL",
-      }).format(amount);
-
-      return <div className="text-right font-medium">{formatted}</div>; // Asegurarse de tener text-right para la celda
-    },
-  },
-  {
-    accessorKey: "descripcion",
+    accessorKey: "apellido",
     header: ({ column }) => (
       <Button
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         className="text-left"
       >
-        Descripcion
+        Apellido
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
   },
   {
-    accessorKey: "fechaRegistro",
+    accessorKey: "correo",
     header: ({ column }) => (
       <Button
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        className="text-right "
+        className="text-left "
       >
-        Fecha creación
+        Correo
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
-    cell: ({ row }) => {
-      const fechaCreacion = row.getValue("fechaRegistro") as string;
-      const formatted = FormateadorFecha(fechaCreacion);
-      return <div className="text-right">{formatted}</div>;
-    },
   },
   {
-    accessorKey: "stock",
+    accessorKey: "telefono",
     header: ({ column }) => (
       <Button
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        className="text-right" // Cambiar a text-right para alinear el encabezado
+        className="text-left"
       >
-        Stock Producto
+        Telefono
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
-    cell: ({ row }) => {
-      const stock = row.getValue("stock") as string;
-      return <p className="text-right px-8">{stock}</p>; // Cambiar a text-right para alinear la celda
-    },
+  },
+  {
+    accessorKey: "direccion",
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        className="text-left"
+      >
+        Direccion
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
   },
   {
     accessorKey: "activo",
@@ -131,23 +125,28 @@ export const columns: ColumnDef<Producto>[] = [
     },
   },
   {
-    accessorKey: "categoriaNombre",
+    accessorKey: "fechaRegistro",
     header: ({ column }) => (
       <Button
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        className="text-left"
+        className="text-right "
       >
-        Categoria
+        Fecha creación
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
+    cell: ({ row }) => {
+      const fechaCreacion = row.getValue("fechaRegistro") as string;
+      const formatted = FormateadorFecha(fechaCreacion);
+      return <div className="text-right">{formatted}</div>;
+    },
   },
   {
     id: "actions",
     header: "Acciones",
     cell: ({ row }) => {
-      const producto = row.original;
+      const cliente = row.original;
 
       return (
         <DropdownMenu>
@@ -159,7 +158,7 @@ export const columns: ColumnDef<Producto>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Acciones</DropdownMenuLabel>
-            <Link href={`/productos/${producto.productoId}/edit`}>
+            <Link href={`/clientes/${cliente.clienteId}/edit`}>
               <DropdownMenuItem>Editar</DropdownMenuItem>
             </Link>
           </DropdownMenuContent>

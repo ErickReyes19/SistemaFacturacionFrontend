@@ -69,7 +69,8 @@ export function FormProducto() {
           values.nombreProducto,
           values.precioProducto,
           values.descripcion,
-          values.categoriaNombre
+          values.categoriaNombre,
+          values.stock
         );
         toast({
           title: "Éxito",
@@ -137,6 +138,22 @@ export function FormProducto() {
                 </FormControl>
                 <FormDescription>
                   Ingrese el precio del producto
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="stock"
+            render={({ field }) => (
+              <FormItem className="flex-1 w-1/2">
+                <FormLabel>Stock Producto</FormLabel>
+                <FormControl>
+                  <Input placeholder="Stock" type="text" {...field} />
+                </FormControl>
+                <FormDescription>
+                  Ingrese el stock del producto
                 </FormDescription>
                 <FormMessage />
               </FormItem>

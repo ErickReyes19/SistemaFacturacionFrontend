@@ -44,6 +44,7 @@ export const ProductoElementSchema = z.object({
   "descripcion": z.string(),
   "categoriaId": z.string(),
   "activo": z.boolean(),
+  "stock": z.string()
 });
 
 interface FormEditProuctoProps {
@@ -61,7 +62,8 @@ export function FormEditProducto({ producto }: FormEditProuctoProps) {
       descripcion: producto.descripcion,
       nombreProducto: producto.nombreProducto,
       precioProducto: producto.precioProducto.toString(),
-      categoriaId: producto.categoriaNombre
+      categoriaId: producto.categoriaNombre,
+      stock: producto.stock,
 
     },
   });
@@ -92,7 +94,8 @@ export function FormEditProducto({ producto }: FormEditProuctoProps) {
           descripcion: values.descripcion,
           fechaRegistro: producto.fechaRegistro,
           nombreProducto: values.nombreProducto,
-          productoId: producto.productoId
+          productoId: producto.productoId,
+          stock:values.stock
         });
         toast({
           title: "Éxito",
@@ -177,6 +180,22 @@ export function FormEditProducto({ producto }: FormEditProuctoProps) {
                 </FormControl>
                 <FormDescription>
                   Ingrese el precio del producto
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="stock"
+            render={({ field }) => (
+              <FormItem className="flex-1 w-1/2">
+                <FormLabel>Stock producto</FormLabel>
+                <FormControl>
+                  <Input placeholder="Stock" type="text" {...field} />
+                </FormControl>
+                <FormDescription>
+                  Ingrese el stock del producto
                 </FormDescription>
                 <FormMessage />
               </FormItem>
