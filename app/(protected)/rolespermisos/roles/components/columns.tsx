@@ -46,6 +46,23 @@ export const columns: ColumnDef<Rol>[] = [
     ),
   },
   {
+    accessorKey: "permisosIds",
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        className="text-center "
+      >
+        Cantidad de permisos
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
+    cell: ({ row }) => {
+      const permisos = row.getValue("permisosIds") as string;
+      return <div className="text-center">{permisos.length}</div>;
+    },
+  },
+  {
     accessorKey: "fechaCreacion",
     header: ({ column }) => (
       <Button

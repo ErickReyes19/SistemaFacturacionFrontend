@@ -24,8 +24,10 @@ export async function getRolById(id: string) {
 }
 
 export async function postRol({ rol }: { rol: Rol }) {
+  console.log("🚀 ~ postRol ~ rol:", rol)
   try {
     const response = await apiService.post("/roles", rol);
+    console.log("🚀 ~ postRol ~ response:", response.data)
     return response.data;
   } catch (error) {
     console.error("Error al crear cliente:", error);
@@ -50,6 +52,15 @@ export async function getPermisos() {
     return [];
   }
 }
+export async function getPermisosActivos() {
+  try {
+    const response = await apiService.get<Permiso[]>("/permisosactivos");
+    return response.data;
+  } catch (error) {
+    console.error("Error al obtener permisos:", error);
+    return [];
+  }
+}
 
 export async function getPermisoById(id: string) {
   try {
@@ -60,11 +71,20 @@ export async function getPermisoById(id: string) {
     return null;
   }
 }
+export async function deleltePermisoById(id: string) {
+  try {
+    const response = await apiService.delete<Permiso>(`/permisos/${id}`);
+    return response.status;
+  } catch (error) {
+    console.error("Error al obtener el permiso:", error);
+    return null;
+  }
+}
 
 export async function postPermiso({ permiso }: { permiso: Permiso }) {
   try {
     const response = await apiService.post("/permisos", permiso);
-    return response.data;
+    return response.status;
   } catch (error) {
     console.error("Error al crear el permiso:", error);
     throw error;

@@ -14,12 +14,14 @@ import {
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation"; // Cambiar aquí
+import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
-import { Rol } from "@/lib/Types";
+import { Rol, Permiso } from "@/lib/Types";
 import { Switch } from "@/components/ui/switch";
 import { RoleSchema } from "@/app/(protected)/rolespermisos/shema";
 import { putRol } from "@/app/(protected)/rolespermisos/actions";
+import PermissionCheckboxes from "../../../components/CheckBoxPermisos";
+import React from "react";
 
 export const CategoriaElementSchema = z.object({
   nombre: z.string(),
@@ -27,8 +29,8 @@ export const CategoriaElementSchema = z.object({
   activo: z.boolean(),
 });
 
-export function FormEditRol({ rol }: { rol: Rol }) {
-  const router = useRouter(); // Usa useRouter aquí
+export function FormEditRol({ rol, permisos }: { rol: Rol; permisos: Permiso[] }) {
+  const router = useRouter();
   const { toast } = useToast();
   const form = useForm<z.infer<typeof RoleSchema>>({
     resolver: zodResolver(RoleSchema),
@@ -40,14 +42,23 @@ export function FormEditRol({ rol }: { rol: Rol }) {
     },
   });
 
+  const [selectedPermisos, setSelectedPermisos] = React.useState<string[]>(rol.permisosIds || []);
+
+  const handlePermissionChange = (permisoId: string) => {
+    setSelectedPermisos((prev) =>
+      prev.includes(permisoId) ? prev.filter((id) => id !== permisoId) : [...prev, permisoId]
+    );
+  };
+
   async function onSubmit(values: z.infer<typeof RoleSchema>) {
     try {
-      await putRol({data: values});
+      await putRol({ data: { ...values, permisosIds: selectedPermisos } });
       toast({
         title: "Éxito",
-        description: "Rol editada con éxito",
+        description: "Rol editado con éxito",
       });
       router.push("/rolespermisos/roles");
+      router.refresh();
     } catch (error) {
       console.error("Error al editar el rol:", error);
       toast({
@@ -70,10 +81,7 @@ export function FormEditRol({ rol }: { rol: Rol }) {
                   <FormLabel className="text-base">Activar rol</FormLabel>
                 </div>
                 <FormControl>
-                  <Switch
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                  />
+                  <Switch checked={field.value} onCheckedChange={field.onChange} />
                 </FormControl>
               </FormItem>
             )}
@@ -87,9 +95,7 @@ export function FormEditRol({ rol }: { rol: Rol }) {
                 <FormControl>
                   <Input placeholder="Nombre" {...field} />
                 </FormControl>
-                <FormDescription>
-                  Ingrese el nombre del rol
-                </FormDescription>
+                <FormDescription>Ingrese el nombre del rol</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -108,6 +114,17 @@ export function FormEditRol({ rol }: { rol: Rol }) {
               </FormItem>
             )}
           />
+
+          {/* Sección de permisos */}
+          <FormItem>
+            <FormLabel>Permisos</FormLabel>
+            <PermissionCheckboxes
+              permisos={permisos}
+              permisosIds={selectedPermisos}
+              onChange={handlePermissionChange}
+            />
+            <FormDescription>Seleccione los permisos para este rol</FormDescription>
+          </FormItem>
 
           <Button type="submit">Editar</Button>
         </form>

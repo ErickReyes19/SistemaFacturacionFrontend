@@ -18,25 +18,40 @@ import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import { RoleSchema } from "../../shema";
 import { postRol } from "../../actions";
+import PermissionCheckboxes from "./CheckBoxPermisos";
+import { Permiso } from "@/lib/Types";
+import React from "react";
 
 
-
-export function FormRol() {
+export function FormRol({permisos}: {permisos: Permiso[]}) {
   const router = useRouter(); 
   const { toast } = useToast();
+  
   const form = useForm<z.infer<typeof RoleSchema>>({
     resolver: zodResolver(RoleSchema),
   });
 
-  async function onSubmit(values: z.infer<typeof RoleSchema>) {
+  const [selectedPermisos, setSelectedPermisos] = React.useState<string[]>([]);
 
+  const handlePermissionChange = (permisoId: string) => {
+    setSelectedPermisos((prev) => 
+      prev.includes(permisoId)
+        ? prev.filter(id => id !== permisoId)
+        : [...prev, permisoId]
+    );
+  };
+
+  async function onSubmit(values: z.infer<typeof RoleSchema>) {
     try {
-      await postRol({rol: values});
+      const response = await postRol({rol: { ...values, permisosIds: selectedPermisos }});  
+      console.log("🚀 ~ onSubmit ~ response:", response)
+
       toast({
         title: "Éxito",
         description: "Rol creado con éxito",
       });
       router.push("/rolespermisos/roles");
+      router.refresh();
     } catch (error) {
       toast({
         title: "Error",
@@ -57,13 +72,12 @@ export function FormRol() {
               <FormControl>
                 <Input placeholder="Nombre" {...field} />
               </FormControl>
-              <FormDescription>
-                Ingrese el nombre del rol
-              </FormDescription>
+              <FormDescription>Ingrese el nombre del rol</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
+        
         <FormField
           control={form.control}
           name="descripcion"
@@ -78,6 +92,18 @@ export function FormRol() {
             </FormItem>
           )}
         />
+        
+        {/* Aquí agregamos el componente PermissionCheckboxes */}
+        <FormItem>
+          <FormLabel>Permisos</FormLabel>
+          <PermissionCheckboxes
+            permisos={permisos}  
+            permisosIds={selectedPermisos}  // Pasamos los permisos seleccionados
+            onChange={handlePermissionChange}  // Pasamos la función para manejar el cambio
+          />
+          <FormDescription>Seleccione los permisos para este rol</FormDescription>
+        </FormItem>
+
         <Button type="submit">Submit</Button>
       </form>
     </Form>

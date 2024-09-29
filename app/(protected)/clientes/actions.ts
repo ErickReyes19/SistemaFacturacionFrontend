@@ -7,7 +7,6 @@ import { ClienteElementSchema } from "./schema";
 export async function getClientes() {
   try {
     const response = await apiService.get<Cliente[]>("/clientes");
-    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error("Error al obtener los clientes:", error);

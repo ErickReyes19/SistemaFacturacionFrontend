@@ -34,7 +34,7 @@ export default async function Clientes() {
             nombre="Permisos"
           />
           <CardIconLink
-            enlace="/rolespermisos/asignarpermisos"
+            enlace="/rolespermisos/rolespermisos"
             Icon={Settings2}
             nombre="Asignar Permisos"
           />

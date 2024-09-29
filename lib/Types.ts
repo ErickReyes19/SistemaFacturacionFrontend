@@ -35,6 +35,7 @@ export type Rol = {
     descripcion:   string;
     fechaCreacion: Date;
     activo:        boolean;
+    permisosIds:   string[];
 }
 
 export type Permiso = {
@@ -43,6 +44,12 @@ export type Permiso = {
     fechaCreacion: Date;
     activo:        boolean;
 }
+
+export type RolPermisos = {
+    RolId:       string;
+    PermisosIds: string[];
+}
+
 
 
 

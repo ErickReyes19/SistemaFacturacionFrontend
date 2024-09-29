@@ -54,6 +54,7 @@ export function FormEditCategoria({ categoria }: FormEditCategoriaProps) {
         description: "Categoría editada con éxito",
       });
       router.push("/categorias");
+      router.refresh();
     } catch (error) {
       console.error("Error al enviar la categoría:", error);
       toast({

@@ -37,6 +37,7 @@ export function FormCategoria() {
         description: "Categoría creada con éxito",
       });
       router.push("/categorias");
+      router.refresh();
     } catch (error) {
       console.error("Error al enviar la categoría:", error);
       toast({

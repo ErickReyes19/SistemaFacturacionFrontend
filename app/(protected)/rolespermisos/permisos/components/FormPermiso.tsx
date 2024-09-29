@@ -31,12 +31,15 @@ export function FormPermiso() {
   async function onSubmit(values: z.infer<typeof PermisoElementSchema>) {
 
     try {
-      await postPermiso({permiso: values});
-      toast({
-        title: "Éxito",
-        description: "Permiso creado con éxito",
-      });
-      router.push("/rolespermisos/permisos");
+      const response = await postPermiso({permiso: values});
+      if(response === 200){
+        toast({
+          title: "Éxito",
+          description: "Permiso creado con éxito",
+        });
+        router.push("/rolespermisos/permisos");
+        router.refresh();
+      }
     } catch (error) {
       toast({
         title: "Error",
@@ -53,12 +56,12 @@ export function FormPermiso() {
           name="nombre"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Nombre rol</FormLabel>
+              <FormLabel>Nombre permiso</FormLabel>
               <FormControl>
                 <Input placeholder="Nombre" {...field} />
               </FormControl>
               <FormDescription>
-                Ingrese el nombre del rol
+                Ingrese el nombre del permiso
               </FormDescription>
               <FormMessage />
             </FormItem>

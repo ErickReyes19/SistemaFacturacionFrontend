@@ -16,7 +16,7 @@ export default async function Home({
     }
     return (
         <main className="w-full">
-            <HeaderComponent Icon={Edit} description="En este apartado podrá editar o desactivar un permiso" screenName="Roles" />
+            <HeaderComponent Icon={Edit} description="En este apartado podrá editar o desactivar un permiso" screenName="Permiso" />
             <FormEditPermiso permiso={responsePermiso} />
 
         </main>

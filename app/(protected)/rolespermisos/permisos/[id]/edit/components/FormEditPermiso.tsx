@@ -17,20 +17,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation"; // Cambiar aquí
 import { useToast } from "@/hooks/use-toast";
 import { Permiso } from "@/lib/Types";
-import { Switch } from "@/components/ui/switch";
-import { RoleSchema } from "@/app/(protected)/rolespermisos/shema";
-import { putPermiso, putRol } from "@/app/(protected)/rolespermisos/actions";
+import { Trash2 } from "lucide-react";
 import { PermisoElementSchema } from "../../../shema";
-
-export const CategoriaElementSchema = z.object({
-  nombre: z.string(),
-  descripcion: z.string(),
-  activo: z.boolean(),
-});
+import { putPermiso, deleltePermisoById } from "@/app/(protected)/rolespermisos/actions"; // Asegúrate de que esté definida la función deletePermiso
+import { Switch } from "@/components/ui/switch";
 
 export function FormEditPermiso({ permiso }: { permiso: Permiso }) {
   const router = useRouter(); // Usa useRouter aquí
   const { toast } = useToast();
+  
   const form = useForm<z.infer<typeof PermisoElementSchema>>({
     resolver: zodResolver(PermisoElementSchema),
     defaultValues: {
@@ -43,10 +38,10 @@ export function FormEditPermiso({ permiso }: { permiso: Permiso }) {
 
   async function onSubmit(values: z.infer<typeof PermisoElementSchema>) {
     try {
-      await putPermiso({data: values});
+      await putPermiso({ data: values });
       toast({
         title: "Éxito",
-        description: "Permiso editada con éxito",
+        description: "Permiso editado con éxito",
       });
       router.push("/rolespermisos/permisos");
     } catch (error) {
@@ -58,17 +53,43 @@ export function FormEditPermiso({ permiso }: { permiso: Permiso }) {
     }
   }
 
+  async function handleDeletePermiso(id: string) {
+    try {
+      const response = await deleltePermisoById(id); 
+      console.log("🚀 ~ handleDeletePermiso ~ response:", response)
+      if(response == 200){
+        toast({
+          title: "Permiso eliminado",
+          description: `El permiso ${permiso.nombre} fue eliminado correctamente.`,
+        });
+        router.push("/rolespermisos/permisos");
+        router.refresh();
+      }
+    } catch (error) {
+      console.error("Error al eliminar el permiso:", error);
+      toast({
+        title: "Error",
+        description: `Error al eliminar el permiso: ${error}`,
+      });
+    }
+  }
+
   return (
     <div className="border p-4 rounded-md">
+      <div className="flex items-center py-4 justify-end">
+        <Button onClick={() => handleDeletePermiso(permiso.permisoId)}>
+          <Trash2 /> Eliminar
+        </Button>
+      </div>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <FormField
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+        <FormField
             control={form.control}
             name="activo"
             render={({ field }) => (
               <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                 <div className="space-y-0.5">
-                  <FormLabel className="text-base">Activar rol</FormLabel>
+                  <FormLabel className="text-base">Activar permiso</FormLabel>
                 </div>
                 <FormControl>
                   <Switch
@@ -84,13 +105,11 @@ export function FormEditPermiso({ permiso }: { permiso: Permiso }) {
             name="nombre"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Nombre rol</FormLabel>
+                <FormLabel>Nombre del permiso</FormLabel>
                 <FormControl>
                   <Input placeholder="Nombre" {...field} />
                 </FormControl>
-                <FormDescription>
-                  Ingrese el nombre del rol
-                </FormDescription>
+                <FormDescription>Ingrese el nombre del permiso</FormDescription>
                 <FormMessage />
               </FormItem>
             )}

@@ -35,6 +35,7 @@ export function FormCliente() {
         description: "Cliente creado con éxito",
       });
       router.push("/clientes");
+      router.refresh();
     } catch (error) {
       console.error("Error al crear el cliente:", error);
       toast({

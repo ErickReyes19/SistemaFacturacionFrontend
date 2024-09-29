@@ -77,6 +77,7 @@ export function FormProducto() {
           description: "Producto creado con éxito",
         });
         router.push("/productos");
+        router.refresh();
       } catch (error) {
         console.error("Error al enviar el producto:", error);
         toast({

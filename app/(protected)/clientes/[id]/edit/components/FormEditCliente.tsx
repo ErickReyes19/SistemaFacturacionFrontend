@@ -54,6 +54,7 @@ export function FormEditCliente({ cliente }: {cliente: Cliente}) {
         description: "Categoría editada con éxito",
       });
       router.push("/clientes");
+      router.refresh();
     } catch (error) {
       console.error("Error al enviar la categoría:", error);
       toast({
