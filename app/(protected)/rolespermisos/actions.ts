@@ -12,6 +12,15 @@ export async function getRoles() {
     return [];
   }
 }
+export async function getRolesActivos() {
+  try {
+    const response = await apiService.get<Rol[]>("/rolesActivo");
+    return response.data;
+  } catch (error) {
+    console.error("Error al obtener roles:", error);
+    return [];
+  }
+}
 
 export async function getRolById(id: string) {
   try {

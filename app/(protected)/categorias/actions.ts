@@ -31,26 +31,24 @@ export async function getCategoriaById(id: string) {
   }
 }
 
-export async function postCategorias(nombre: string, descripcion: string) {
-  const data = {
-    nombre,
-    descripcion,
-  };
+export async function postCategorias({categoria}: {categoria: Categoria}) {
   try {
-    const response = await apiService.post("/categorias", data);
+    const response = await apiService.post("/categorias", categoria);
     return response.data;
   } catch (error) {
-    console.error("Error al obtener categorías:", error);
+    console.error("Error al guardar la categoría:", error);
     return [];
   }
 }
 
-export async function putCategoria(data: Categoria) {
+export async function putCategoria({categoria}: {categoria: Categoria}) {
+console.log("🚀 ~ putCategoria ~ categoria:", categoria)
 
   try {
-    const response = await apiService.put(`/categorias/${data.categoriaId}`, data);
+    const response = await apiService.put(`/categorias/${categoria.categoriaId}`, categoria);
     return response.data;
   } catch (error) {
-    return [];
+    console.error("Error al actualizar la categoría:", error);
+    return error;
   }
 }

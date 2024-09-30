@@ -32,71 +32,49 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { useEffect, useState, useTransition } from "react"; // Import useTransition
-import { Categoria, Producto } from "@/lib/Types";
+import { Categoria } from "@/lib/Types";
 import SkeletonTable from "../../../loading";
 import { putProducto } from "../../../actions";
-import { getCategoriasActivas, putCategoria } from "@/app/(protected)/categorias/actions";
+import {
+  getCategoriasActivas,
+  putCategoria,
+} from "@/app/(protected)/categorias/actions";
 import { Switch } from "@/components/ui/switch";
+import {
+  ProductoElementSchema,
+  ProductoPostElementSchema,
+} from "../../../schema";
+import { ProductoPost } from "../../../types";
 
-export const ProductoElementSchema = z.object({
-  "nombreProducto": z.string(),
-  "precioProducto": z.string(),
-  "descripcion": z.string(),
-  "categoriaId": z.string(),
-  "activo": z.boolean(),
-  "stock": z.string()
-});
-
-interface FormEditProuctoProps {
-  producto: Producto; // Debe ser de tipo Categoria
-}
-
-export function FormEditProducto({ producto }: FormEditProuctoProps) {
+export function FormEditProducto({
+  producto,
+  categorias,
+}: {
+  producto: ProductoPost;
+  categorias: Categoria[];
+}) {
   const router = useRouter();
   const { toast } = useToast();
 
-  const form = useForm<z.infer<typeof ProductoElementSchema>>({
-    resolver: zodResolver(ProductoElementSchema),    
+  const form = useForm<z.infer<typeof ProductoPostElementSchema>>({
+    resolver: zodResolver(ProductoPostElementSchema),
     defaultValues: {
-      activo: producto.activo,
+      categoriaId: producto.categoriaId,
+      productoId: producto.productoId,
       descripcion: producto.descripcion,
       nombreProducto: producto.nombreProducto,
-      precioProducto: producto.precioProducto.toString(),
-      categoriaId: producto.categoriaNombre,
+      precioProducto: producto.precioProducto,
       stock: producto.stock,
-
+      activo: producto.activo,
     },
   });
 
-  const [categorias, setCategorias] = useState<Categoria[]>([]);
   const [isPending, startTransition] = useTransition(); // Declare loading state
 
-  useEffect(() => {
-    const fetchCategorias = async () => {
-      const fetchedCategorias: Categoria[] = await getCategoriasActivas();
-      setCategorias(fetchedCategorias);
-    };
-
-    fetchCategorias();
-  }, []);
-
-  if (!categorias || categorias.length === 0) {
-    return <SkeletonTable />;
-  }
-
-  async function onSubmit(values: z.infer<typeof ProductoElementSchema>) {
+  async function onSubmit(values: z.infer<typeof ProductoPostElementSchema>) {
     startTransition(async () => {
       try {
-        await putProducto({
-          precioProducto: values.precioProducto,
-          activo: values.activo,
-          categoriaNombre: values.categoriaId,
-          descripcion: values.descripcion,
-          fechaRegistro: producto.fechaRegistro,
-          nombreProducto: values.nombreProducto,
-          productoId: producto.productoId,
-          stock:values.stock
-        });
+        await putProducto({ producto: values });
         toast({
           title: "Éxito",
           description: "Producto creado con éxito",
@@ -120,22 +98,22 @@ export function FormEditProducto({ producto }: FormEditProuctoProps) {
         className="space-y-8 border rounded-md p-4"
       >
         <FormField
-            control={form.control}
-            name="activo"
-            render={({ field }) => (
-              <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                <div className="space-y-0.5">
-                  <FormLabel className="text-base">Activar categoria</FormLabel>
-                </div>
-                <FormControl>
-                  <Switch
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                  />
-                </FormControl>
-              </FormItem>
-            )}
-          />
+          control={form.control}
+          name="activo"
+          render={({ field }) => (
+            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+              <div className="space-y-0.5">
+                <FormLabel className="text-base">Activar producto</FormLabel>
+              </div>
+              <FormControl>
+                <Switch
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
+            </FormItem>
+          )}
+        />
         <div className="flex space-x-4">
           <FormField
             control={form.control}
@@ -177,7 +155,14 @@ export function FormEditProducto({ producto }: FormEditProuctoProps) {
               <FormItem className="flex-1 w-1/2">
                 <FormLabel>Precio producto</FormLabel>
                 <FormControl>
-                  <Input placeholder="Precio" type="text" {...field} />
+                  <Input
+                    placeholder="Precio"
+                    type="number"
+                    {...field}
+                    {...form.register("precioProducto", {
+                      valueAsNumber: true, // Esto asegura que se trata como número
+                    })}
+                  />
                 </FormControl>
                 <FormDescription>
                   Ingrese el precio del producto
@@ -193,11 +178,16 @@ export function FormEditProducto({ producto }: FormEditProuctoProps) {
               <FormItem className="flex-1 w-1/2">
                 <FormLabel>Stock producto</FormLabel>
                 <FormControl>
-                  <Input placeholder="Stock" type="text" {...field} />
+                  <Input
+                    placeholder="Stock"
+                    type="number"
+                    {...field}
+                    {...form.register("stock", {
+                      valueAsNumber: true, // Esto asegura que se trata como número
+                    })}
+                  />
                 </FormControl>
-                <FormDescription>
-                  Ingrese el stock del producto
-                </FormDescription>
+                <FormDescription>Ingrese el stock del producto</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -273,7 +263,8 @@ export function FormEditProducto({ producto }: FormEditProuctoProps) {
         </div>
 
         <Button type="submit" disabled={isPending}>
-          {isPending ? "Cargando..." : "Crear producto"} {/* Change button text */}
+          {isPending ? "Cargando..." : "Crear producto"}{" "}
+          {/* Change button text */}
         </Button>
       </form>
     </Form>

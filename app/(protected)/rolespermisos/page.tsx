@@ -4,6 +4,7 @@ import {
   ListCheck,
   Settings2,
   User,
+  User2,
   UserCog,
   Users,
 } from "lucide-react";
@@ -19,10 +20,15 @@ export default async function Clientes() {
       <CardContent>
         <HeaderComponent
           Icon={UserCog}
-          description="En este apartado podrá ver los diferentes roles, permisos y asignación de roles"
-          screenName="Roles y permisos"
+          description="En este apartado podrá ver los diferentes usuarios, roles y permisos"
+          screenName="Usuarios"
         />
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+          <CardIconLink
+            enlace="/usuarios"
+            Icon={User2}
+            nombre="Usuarios"
+          />
           <CardIconLink
             enlace="/rolespermisos/roles"
             Icon={UserCog}
@@ -32,11 +38,6 @@ export default async function Clientes() {
             enlace="/rolespermisos/permisos"
             Icon={ListCheck}
             nombre="Permisos"
-          />
-          <CardIconLink
-            enlace="/rolespermisos/rolespermisos"
-            Icon={Settings2}
-            nombre="Asignar Permisos"
           />
         </div>
       </CardContent>

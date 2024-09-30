@@ -17,8 +17,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { postProducto } from "../actions";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
-import { ProductoElementSchema } from "../schema";
-import { getCategoriasActivas } from "../../categorias/actions";
+import { ProductoPostElementSchema } from "../schema";
 import {
   Popover,
   PopoverContent,
@@ -34,44 +33,25 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { useEffect, useState, useTransition } from "react"; // Import useTransition
+import { useTransition } from "react"; // Import useTransition
 import { Categoria } from "@/lib/Types";
-import SkeletonTable from "../loading";
 
-export function FormProducto() {
+export function FormProducto({ categorias }: { categorias: Categoria[] }) {
   const router = useRouter();
   const { toast } = useToast();
 
-  const form = useForm<z.infer<typeof ProductoElementSchema>>({
-    resolver: zodResolver(ProductoElementSchema),
+  const form = useForm<z.infer<typeof ProductoPostElementSchema>>({
+    resolver: zodResolver(ProductoPostElementSchema),
   });
 
-  const [categorias, setCategorias] = useState<Categoria[]>([]);
   const [isPending, startTransition] = useTransition(); // Declare loading state
 
-  useEffect(() => {
-    const fetchCategorias = async () => {
-      const fetchedCategorias: Categoria[] = await getCategoriasActivas();
-      setCategorias(fetchedCategorias);
-    };
-
-    fetchCategorias();
-  }, []);
-
-  if (!categorias || categorias.length === 0) {
-    return <SkeletonTable />;
-  }
-
-  async function onSubmit(values: z.infer<typeof ProductoElementSchema>) {
+  async function onSubmit(values: z.infer<typeof ProductoPostElementSchema>) {
     startTransition(async () => {
       try {
-        await postProducto(
-          values.nombreProducto,
-          values.precioProducto,
-          values.descripcion,
-          values.categoriaNombre,
-          values.stock
-        );
+        await postProducto({
+          producto: values
+        });
         toast({
           title: "Éxito",
           description: "Producto creado con éxito",
@@ -135,7 +115,10 @@ export function FormProducto() {
               <FormItem className="flex-1 w-1/2">
                 <FormLabel>Precio producto</FormLabel>
                 <FormControl>
-                  <Input placeholder="Precio" type="text" {...field} />
+                  <Input placeholder="Precio" type="number" {...field} 
+                  {...form.register("precioProducto", {
+                    valueAsNumber: true, // Esto asegura que se trata como número
+                  })}/>
                 </FormControl>
                 <FormDescription>
                   Ingrese el precio del producto
@@ -151,18 +134,19 @@ export function FormProducto() {
               <FormItem className="flex-1 w-1/2">
                 <FormLabel>Stock Producto</FormLabel>
                 <FormControl>
-                  <Input placeholder="Stock" type="text" {...field} />
+                  <Input placeholder="Stock" type="number" {...field} 
+                  {...form.register("stock", {
+                    valueAsNumber: true, // Esto asegura que se trata como número
+                  })}/>
                 </FormControl>
-                <FormDescription>
-                  Ingrese el stock del producto
-                </FormDescription>
+                <FormDescription>Ingrese el stock del producto</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
           />
           <FormField
             control={form.control}
-            name="categoriaNombre"
+            name="categoriaId"
             render={({ field }) => (
               <FormItem className="flex-1 w-1/2">
                 <FormLabel>Categoría</FormLabel>
@@ -200,7 +184,7 @@ export function FormProducto() {
                               key={categoria.categoriaId}
                               onSelect={() => {
                                 form.setValue(
-                                  "categoriaNombre",
+                                  "categoriaId",
                                   categoria.categoriaId
                                 );
                               }}
@@ -231,7 +215,8 @@ export function FormProducto() {
         </div>
 
         <Button type="submit" disabled={isPending}>
-          {isPending ? "Cargando..." : "Crear producto"} {/* Change button text */}
+          {isPending ? "Cargando..." : "Crear producto"}{" "}
+          {/* Change button text */}
         </Button>
       </form>
     </Form>

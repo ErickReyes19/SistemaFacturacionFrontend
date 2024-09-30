@@ -1,7 +1,7 @@
 "use server";
 
-import { Producto } from "@/lib/Types";
 import apiService from "../../../lib/server";
+import { Producto, ProductoPost } from "./types";
 
 export async function getProductos() {
   try {
@@ -9,14 +9,14 @@ export async function getProductos() {
 
     return response.data;
   } catch (error) {
-    console.error("Error al obtener categorías:", error);
+    console.error("Error al obtener los producto:", error);
     return [];
   }
 }
 
 export async function getProductoById(id: string) {
   try {
-    const response = await apiService.get<Producto>(`/productos/${id}`);
+    const response = await apiService.get<ProductoPost>(`/productos/${id}`);
     return response.data;
   } catch (error) {
     console.error("Error al obtener el producto:", error);
@@ -24,40 +24,25 @@ export async function getProductoById(id: string) {
   }
 }
 
-export async function putProducto(data: Producto) {
-
+export async function putProducto({ producto }: { producto: ProductoPost }) {
   try {
-    
-    const response = await apiService.put(`/productos/${data.productoId}`, {
-      ...data, 
-      CategoriaId: data.categoriaNombre, 
-    });
-    
+    const response = await apiService.put(
+      `/productos/${producto.productoId}`,
+      producto
+    );
+
     return response.data;
   } catch (error) {
-    console.error('Error:', error); 
+    console.error("Error al actualizar el producto: ", error);
     return [];
   }
 }
-export async function postProducto(
-  nombreProducto: string,
-  precioProducto: string,
-  descripcion: string,
-  categoriaNombre: string,
-  stock: string
-) {
-  const data = {
-    nombreProducto,
-    precioProducto,
-    descripcion,
-    categoriaNombre,
-    stock
-  };
+export async function postProducto({ producto }: { producto: ProductoPost }) {
   try {
-    const response = await apiService.post("/productos", data);
+    const response = await apiService.post("/productos", producto);
     return response.data;
   } catch (error) {
-    console.error("Error al obtener categorías:", error);
+    console.error("Error al guardar el producto:", error);
     return [];
   }
 }

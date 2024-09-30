@@ -13,18 +13,17 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { redirect } from "next/navigation";
 import Link from "next/link";
-import { Producto } from "../types";
+import { Usuario } from "../type";
 
-export const columns: ColumnDef<Producto>[] = [
+export const columns: ColumnDef<Usuario>[] = [
   {
-    accessorKey: "nombreProducto",
+    accessorKey: "nombre",
     header: ({ column }) => (
       <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        className="text-center"
+      variant="ghost"
+      onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      className="text-left" 
       >
         Nombre
         <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -32,74 +31,30 @@ export const columns: ColumnDef<Producto>[] = [
     ),
   },
   {
-    accessorKey: "precioProducto",
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        className="text-right" // Cambiar a text-right para alinear el encabezado
-      >
-        Precio
-        <ArrowUpDown className="ml-2 h-4 w-4" />
-      </Button>
-    ),
-    cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("precioProducto"));
-      const formatted = new Intl.NumberFormat("en-HN", {
-        style: "currency",
-        currency: "HNL",
-      }).format(amount);
-
-      return <div className="text-right font-medium">{formatted}</div>; // Asegurarse de tener text-right para la celda
-    },
-  },
-  {
-    accessorKey: "descripcion",
+    accessorKey: "correo",
     header: ({ column }) => (
       <Button
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         className="text-left"
       >
-        Descripcion
+        Correo
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
   },
   {
-    accessorKey: "fechaRegistro",
+    accessorKey: "rolUsuario.nombre",
     header: ({ column }) => (
       <Button
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        className="text-right "
+        className="text-left"
       >
-        Fecha creación
+        Rol
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
-    cell: ({ row }) => {
-      const fechaCreacion = row.getValue("fechaRegistro") as string;
-      const formatted = FormateadorFecha(fechaCreacion);
-      return <div className="text-right">{formatted}</div>;
-    },
-  },
-  {
-    accessorKey: "stock",
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        className="text-right" // Cambiar a text-right para alinear el encabezado
-      >
-        Stock Producto
-        <ArrowUpDown className="ml-2 h-4 w-4" />
-      </Button>
-    ),
-    cell: ({ row }) => {
-      const stock = row.getValue("stock") as string;
-      return <p className="text-right px-8">{stock}</p>; // Cambiar a text-right para alinear la celda
-    },
   },
   {
     accessorKey: "activo",
@@ -131,23 +86,28 @@ export const columns: ColumnDef<Producto>[] = [
     },
   },
   {
-    accessorKey: "categoriaNombre",
+    accessorKey: "fechaCreacion",
     header: ({ column }) => (
       <Button
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        className="text-left"
+        className="text-left "
       >
-        Categoria
+        Fecha creación
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
+    cell: ({ row }) => {
+      const fechaCreacion = row.getValue("fechaCreacion") as string;
+      const formatted = FormateadorFecha(fechaCreacion);
+      return <div className="text-left">{formatted}</div>;
+    },
   },
   {
     id: "actions",
     header: "Acciones",
     cell: ({ row }) => {
-      const producto = row.original;
+      const Usuario = row.original;
 
       return (
         <DropdownMenu>
@@ -159,7 +119,7 @@ export const columns: ColumnDef<Producto>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Acciones</DropdownMenuLabel>
-            <Link href={`/productos/${producto.productoId}/edit`}>
+            <Link href={`/usuarios/${Usuario.usuarioId}/edit`}>
               <DropdownMenuItem>Editar</DropdownMenuItem>
             </Link>
           </DropdownMenuContent>

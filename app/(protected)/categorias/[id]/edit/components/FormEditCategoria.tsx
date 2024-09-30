@@ -19,23 +19,18 @@ import { useRouter } from "next/navigation"; // Cambiar aquí
 import { useToast } from "@/hooks/use-toast";
 import { Categoria } from "@/lib/Types";
 import { Switch } from "@/components/ui/switch";
+import { CategoriaElementSchema } from "../../../schema";
 
-export const CategoriaElementSchema = z.object({
-  nombre: z.string(),
-  descripcion: z.string(),
-  activo: z.boolean(),
-});
 
-interface FormEditCategoriaProps {
-  categoria: Categoria; // Debe ser de tipo Categoria
-}
 
-export function FormEditCategoria({ categoria }: FormEditCategoriaProps) {
+
+export function FormEditCategoria({categoria}:{categoria: Categoria}) {
   const router = useRouter(); // Usa useRouter aquí
   const { toast } = useToast();
   const form = useForm<z.infer<typeof CategoriaElementSchema>>({
     resolver: zodResolver(CategoriaElementSchema),
     defaultValues: {
+      categoriaId: categoria.categoriaId,
       activo: categoria.activo,
       descripcion: categoria.descripcion,
       nombre: categoria.nombre,
@@ -43,11 +38,10 @@ export function FormEditCategoria({ categoria }: FormEditCategoriaProps) {
   });
 
   async function onSubmit(values: z.infer<typeof CategoriaElementSchema>) {
+    console.log("🚀 ~ onSubmit ~ values:", values)
     try {
       await putCategoria({
-        ...values,
-        categoriaId: categoria.categoriaId,
-        fechaCreacion: categoria.fechaCreacion,
+        categoria: values
       });
       toast({
         title: "Éxito",

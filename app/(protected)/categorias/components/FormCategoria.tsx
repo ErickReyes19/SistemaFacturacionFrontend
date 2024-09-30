@@ -31,7 +31,7 @@ export function FormCategoria() {
   async function onSubmit(values: z.infer<typeof CategoriaElementSchema>) {
 
     try {
-      await postCategorias(values.nombre, values.descripcion);
+      await postCategorias({categoria: values});
       toast({
         title: "Éxito",
         description: "Categoría creada con éxito",
